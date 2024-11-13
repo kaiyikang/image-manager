@@ -15,4 +15,9 @@ jobs:
       - name: Docker Lint
         uses: hadolint/hadolint-action@v3.1.0
         with:
-          dockerfile: Dockerfile
+          dockerfile: postgres.dockerfile
+
+      - name: Docker Compose Lint
+        run: |
+          pip install docker-compose
+          docker-compose config -q
