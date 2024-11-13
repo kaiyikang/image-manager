@@ -1,8 +1,12 @@
-version: "1.0"
 services:
+  web:
+    image: nginx
 
 networks:
-  ignore:
+  frontend:
+  backend:
 
 volumes:
-  ignore:
+  data:
+# configs:
+# secrets:
