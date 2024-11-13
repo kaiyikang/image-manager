@@ -1,5 +1,4 @@
 FROM postgres:17.0-alpine
-# https://1kevinson.com/how-to-create-a-postgres-database-in-docker/?source=post_page-----c849ec5daec6--------------------------------
 
 LABEL author="YKai"
 LABEL description="Postgres Image for Blog"
