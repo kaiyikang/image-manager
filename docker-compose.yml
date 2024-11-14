@@ -1,12 +1,21 @@
 services:
-  web:
-    image: nginx
-
-networks:
-  frontend:
-  backend:
+  postgres:
+    build:
+      context: .
+      dockerfile: postgres.dockerfile
+    image: "postgres-ykai"
+    container_name: ${PG_CONTAINER_NAME}
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB} # name of initial DB
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: ${PGDATA} # data saved location
+    volumes:
+      - db:${PGDATA} # data -> db
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
 
 volumes:
-  data:
-# configs:
-# secrets:
+  db:
+    external: true
