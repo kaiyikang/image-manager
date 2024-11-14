@@ -6,4 +6,4 @@ LABEL version="1.0"
 
 # Docker automatically executes the initialization script in this directory,
 # when the container is first started.
-COPY *.sql /docker-entrypoint-initdb.d/
+COPY db/*.sql /docker-entrypoint-initdb.d/

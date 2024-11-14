@@ -4,8 +4,19 @@
 
 ```bash
 cp .env.sample .env
-docker volume create dbykai
+source .env
+docker volume create ${VOLUME_NAME}
 # volumes name can be found in 'docker-compose.yml'
+docker compose up -d
+```
+
+## Unintall
+
+```bash
+source .env
+docker compose down
+docker volume rm dbykai
+docker image rm postgres-ykai
 ```
 
 ## Reference

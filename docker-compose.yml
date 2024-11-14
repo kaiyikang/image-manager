@@ -11,11 +11,12 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       PGDATA: ${PGDATA} # data saved location
     volumes:
-      - dbykai:${PGDATA} # data -> db
+      - postgres_data:${PGDATA} # data -> db
     ports:
       - "5432:5432"
     restart: unless-stopped
 
 volumes:
-  dbykai:
+  postgres_data:
+    name: ${VOLUME_NAME}
     external: true
