@@ -35,6 +35,26 @@ psql -h localhost -p 5432 -U ${POSTGRES_USER} -d ${POSTGRES_DB} -W ${POSTGRES_PA
   - Spring Web
   - Lombok
 
+## Connection between Spring Boot and Postgres
+
+1. Open Postgres Services
+2. Prepare the configuration for `application.properties`.
+3. Run the application.
+
+The configuration of `application.properties`:
+
+```bash
+spring.application.name=Image Storage Service
+# URL connect to the DB
+spring.datasource.url=jdbc:postgresql://localhost:5432/${POSTGRES_DB}
+spring.datasource.username=${POSTGRES_USER}
+spring.datasource.password=${POSTGRES_PASSWORD}
+# Config JPA
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.hibernate.ddl-auto=update
+```
+
 ## Unintall
 
 ```bash
