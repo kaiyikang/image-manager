@@ -10,6 +10,12 @@ docker volume create ${VOLUME_NAME}
 docker compose up -d
 ```
 
+Use bash script to execute the DB.
+
+```bash
+psql -h localhost -p 5432 -U ${POSTGRES_USER} -d ${POSTGRES_DB} -W ${POSTGRES_PASSWORD}
+```
+
 ## Unintall
 
 ```bash
