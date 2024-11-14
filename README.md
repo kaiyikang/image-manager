@@ -16,6 +16,25 @@ Use bash script to execute the DB.
 psql -h localhost -p 5432 -U ${POSTGRES_USER} -d ${POSTGRES_DB} -W ${POSTGRES_PASSWORD}
 ```
 
+## Spring Initializer
+
+- project: Maven
+- Language: Java
+- Spring Boot: 3.3.5
+- Project Metadata:
+  - Group: com.imageservice
+  - Artifact: image-storage
+  - Name: Image Storage Service
+  - Description: A microservice for managing image upload and download operations with RESTful APIs, supporting secure file storage, retrieval and basic image management functionalities
+  - Package Name: com.imageservice
+  - Packaging: Jar
+  - Java: 17
+- Dependencies:
+  - PostgreSQL Driver
+  - Spring Data JPA
+  - Spring Web
+  - Lombok
+
 ## Unintall
 
 ```bash
