@@ -1,0 +1,210 @@
+openapi: 3.0.0
+info:
+  title: Image Service API
+  version: 1.0.0
+  description: REST API for image service
+
+paths:
+  /api/images:
+    get:
+      summary: List all images
+      responses:
+        '200':
+          description: Successfully retrieved image list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+    post:
+      summary: Upload single image
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Image uploaded successfully
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+
+  /api/images/{imageId}:
+    get:
+      summary: Download image
+      parameters:
+        - name: imageId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Image retrieved successfully
+          content:
+            image/*:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Image not found
+        '500':
+          description: Internal server error
+    delete:
+      summary: Delete image
+      parameters:
+        - name: imageId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Image deleted successfully
+        '404':
+          description: Image not found
+        '500':
+          description: Internal server error
+    patch:
+      summary: Update image info
+      parameters:
+        - name: imageId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Image info updated successfully
+        '404':
+          description: Image not found
+        '500':
+          description: Internal server error
+
+  # /api/images/batch/upload:
+  #   post:
+  #     summary: Batch upload images
+  #     requestBody:
+  #       content:
+  #         multipart/form-data:
+  #           schema:
+  #             type: object
+  #             properties:
+  #               files:
+  #                 type: array
+  #                 items:
+  #                   type: string
+  #                   format: binary
+  #     responses:
+  #       '201':
+  #         description: Images uploaded successfully
+  #       '400':
+  #         description: Bad request
+  #       '500':
+  #         description: Internal server error
+
+  # /api/images/batch:
+  #   delete:
+  #     summary: Batch delete images
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             type: array
+  #             items:
+  #               type: string
+  #     responses:
+  #       '204':
+  #         description: Images deleted successfully
+  #       '400':
+  #         description: Bad request
+  #       '500':
+  #         description: Internal server error
+
+  # /api/images/{imageId}/info:
+  #   get:
+  #     summary: Get image information
+  #     parameters:
+  #       - name: imageId
+  #         in: path
+  #         required: true
+  #         schema:
+  #           type: string
+  #     responses:
+  #       '200':
+  #         description: Image information retrieved successfully
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: object
+  #       '404':
+  #         description: Image not found
+  #       '500':
+  #         description: Internal server error
+
+  # /api/images/{imageId}/resize:
+  #   get:
+  #     summary: Get resized image
+  #     parameters:
+  #       - name: imageId
+  #         in: path
+  #         required: true
+  #         schema:
+  #           type: string
+  #       - name: width
+  #         in: query
+  #         schema:
+  #           type: integer
+  #       - name: height
+  #         in: query
+  #         schema:
+  #           type: integer
+  #     responses:
+  #       '200':
+  #         description: Resized image retrieved successfully
+  #         content:
+  #           image/*:
+  #             schema:
+  #               type: string
+  #               format: binary
+  #       '404':
+  #         description: Image not found
+  #       '500':
+  #         description: Internal server error
+
+  # /api/images/{imageId}/thumbnail:
+  #   get:
+  #     summary: Get image thumbnail
+  #     parameters:
+  #       - name: imageId
+  #         in: path
+  #         required: true
+  #         schema:
+  #           type: string
+  #     responses:
+  #       '200':
+  #         description: Thumbnail retrieved successfully
+  #         content:
+  #           image/*:
+  #             schema:
+  #               type: string
+  #               format: binary
+  #       '404':
+  #         description: Image not found
+  #         content:
+  #           application/problem+json:
+  #             schema:
+  #               $ref: '#/components/schemas/Problem'
+  #       '500':
+  #         description: Internal server error
