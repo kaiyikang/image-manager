@@ -1,4 +1,4 @@
-package com.imageservice;
+package com.imageservice.domain.entity;
 
 import java.time.LocalDateTime;
 import java.util.Map;
