@@ -1,8 +1,10 @@
 package com.imageservice.controller;
 
+import org.springframework.boot.autoconfigure.web.ServerProperties.Tomcat.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,6 +27,16 @@ public class ImageController {
     @GetMapping
     public ResponseEntity<Page<Image>> listImages() {
 
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Resource> getImage(@PathVariable Integer id) {
+
+    }
+
+    @GetMapping("/{id}/info")
+    public ResponseEntity<Image> getImageInfo(@PathVariable Integer id) {
+        return imageRepository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping

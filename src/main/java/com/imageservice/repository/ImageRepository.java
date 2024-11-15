@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 import com.imageservice.domain.entity.Image;
 
 @Repository
-public interface ImageRepository extends JpaRepository<Image, Long> {
+public interface ImageRepository extends JpaRepository<Image, Integer> {
     List<Image> findByContentType(String contentType);
 
     Optional<Image> findByFilePath(String filePath);

@@ -40,11 +40,11 @@ paths:
         '500':
           description: Internal server error
 
-  /api/images/{imageId}:
+  /api/images/{id}:
     get:
       summary: Download image
       parameters:
-        - name: imageId
+        - name: id
           in: path
           required: true
           schema:
@@ -64,7 +64,7 @@ paths:
     delete:
       summary: Delete image
       parameters:
-        - name: imageId
+        - name: id
           in: path
           required: true
           schema:
@@ -79,7 +79,7 @@ paths:
     patch:
       summary: Update image info
       parameters:
-        - name: imageId
+        - name: id
           in: path
           required: true
           schema:
@@ -132,11 +132,11 @@ paths:
   #       '500':
   #         description: Internal server error
 
-  # /api/images/{imageId}/info:
+  # /api/images/{id}/info:
   #   get:
   #     summary: Get image information
   #     parameters:
-  #       - name: imageId
+  #       - name: id
   #         in: path
   #         required: true
   #         schema:
@@ -153,11 +153,11 @@ paths:
   #       '500':
   #         description: Internal server error
 
-  # /api/images/{imageId}/resize:
+  # /api/images/{id}/resize:
   #   get:
   #     summary: Get resized image
   #     parameters:
-  #       - name: imageId
+  #       - name: id
   #         in: path
   #         required: true
   #         schema:
@@ -183,11 +183,11 @@ paths:
   #       '500':
   #         description: Internal server error
 
-  # /api/images/{imageId}/thumbnail:
+  # /api/images/{id}/thumbnail:
   #   get:
   #     summary: Get image thumbnail
   #     parameters:
-  #       - name: imageId
+  #       - name: id
   #         in: path
   #         required: true
   #         schema:
