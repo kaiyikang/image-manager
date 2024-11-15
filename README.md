@@ -68,3 +68,5 @@ docker image rm postgres-ykai
 
 [how to create a postgres database in docker](https://1kevinson.com/how-to-create-a-postgres-database-in-docker/?source=post_page-----c849ec5daec6--------------------------------
 )
+[Using Postgres Effectively in Spring Boot Applications](https://hackernoon.com/using-postgres-effectively-in-spring-boot-applications)
+[How to Upload and Download Image into SQL Database with Spring Boot](https://medium.com/@kouomeukevin/how-to-upload-and-download-image-into-sql-database-with-spring-boot-c849ec5daec6)
