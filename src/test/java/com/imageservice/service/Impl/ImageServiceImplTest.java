@@ -13,15 +13,22 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
+import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.mock.web.MockPageContext;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.imageservice.entity.Image;
@@ -42,7 +49,6 @@ public class ImageServiceImplTest {
 
     @BeforeEach
     void setUp() {
-
     }
 
     @Test
@@ -112,5 +118,39 @@ public class ImageServiceImplTest {
     void getImageInfo_NullId() {
         assertThrows(IllegalArgumentException.class, () -> imageService.getImageInfo(null));
         verify(imageRepository, never()).findById(any());
+    }
+
+    @Test
+    void findAll_Success() {
+        Pageable pageable = PageRequest.of(0, 10);
+        List<Image> images = List.of(
+                createImage(1),
+                createImage(2));
+        Page<Image> expectedPage = new PageImpl<>(images, pageable, images.size());
+        when(imageService.findAll(pageable)).thenReturn(expectedPage);
+
+        // When
+        Page<Image> result = imageService.findAll(pageable);
+
+        assertNotNull(result);
+        assertEquals(images.size(), result.getContent().size());
+        verify(imageRepository).findAll(pageable);
+    }
+
+    @Test
+    void findAll_WithInvalidPageSize_ShouldThrowException() {
+        Pageable pageable = PageRequest.of(0, 101);
+        assertThrows(IllegalArgumentException.class, () -> imageService.findAll(pageable));
+        verify(imageRepository, never()).findAll(pageable);
+    }
+
+    private Image createImage(Integer id) {
+        return Image.builder()
+                .id(id)
+                .name("test" + id + ".jpg")
+                .contentType("image/jpeg")
+                .fileSize(1024L)
+                .filePath("/test/" + id + ".jpg")
+                .build();
     }
 }

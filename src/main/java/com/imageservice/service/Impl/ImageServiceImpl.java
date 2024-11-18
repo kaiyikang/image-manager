@@ -6,11 +6,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.imageservice.entity.Image;
+import com.imageservice.exception.business.image.ImageServiceException;
 import com.imageservice.exception.business.image.InvalidImageException;
 import com.imageservice.exception.business.image.StorageException;
 import com.imageservice.repository.ImageRepository;
@@ -65,6 +68,23 @@ public class ImageServiceImpl implements ImageService {
             throw new IllegalArgumentException("Image id cannot be null");
 
         return imageRepository.findById(id);
+    }
+
+    @Override
+    public Page<Image> findAll(Pageable pageable) {
+        log.debug("Fetching images page {} with size {}",
+                pageable.getPageNumber(),
+                pageable.getPageSize());
+        if (pageable.getPageSize() > 100) {
+            throw new IllegalArgumentException("Page size must not be greater than 100");
+        }
+        try {
+            Page<Image> images = imageRepository.findAll(pageable);
+            return images;
+        } catch (Exception e) {
+            log.error("Error fetching images", e);
+            throw new ImageServiceException("Failed to fetch images", e);
+        }
     }
 
     private boolean isValidContentType(String contentType) {

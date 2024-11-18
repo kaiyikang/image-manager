@@ -1,5 +1,10 @@
 package com.imageservice.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,10 +30,16 @@ import lombok.extern.slf4j.Slf4j;
 public class ImageController {
     private final ImageService imageService;
 
-    // @GetMapping
-    // public ResponseEntity<Page<Image>> listImages() {
-
-    // }
+    @GetMapping
+    public ResponseEntity<Page<Image>> listImages(
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        try {
+            Page<Image> images = imageService.findAll(pageable);
+            return ResponseEntity.ok(images);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 
     // @GetMapping("/{id}")
     // public ResponseEntity<Resource> getImage(@PathVariable Integer id) {
