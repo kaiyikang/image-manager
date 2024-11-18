@@ -4,11 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
+
+import com.imageservice.entity.Image;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
-import com.imageservice.domain.entity.Image;
 
 @Repository
 public interface ImageRepository extends JpaRepository<Image, Integer> {

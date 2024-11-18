@@ -1,0 +1,9 @@
+{
+    "properties": [
+        {
+            "name": "file.upload.path",
+            "type": "java.lang.String",
+            "description": "The file uploaded path, support classpath: and absolute path."
+        }
+    ]
+}
