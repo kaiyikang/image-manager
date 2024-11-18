@@ -1,0 +1,7 @@
+
+curl -X POST \
+-H "Content-Type: multipart/form-data" \
+-F "file=@$(pwd)/tests/cat.jpg" \
+-v http://localhost:8080/api/images
+
+curl -X GET -v http://localhost:8080/api/images/1/info

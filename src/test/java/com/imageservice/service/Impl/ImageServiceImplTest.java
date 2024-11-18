@@ -2,14 +2,18 @@ package com.imageservice.service.Impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -66,5 +70,47 @@ public class ImageServiceImplTest {
         assertEquals(expectedImage.getFileSize(), result.getFileSize());
         verify(localStorageService, times(1)).store(any(), anyString());
         verify(imageRepository, times(1)).save(any(Image.class));
+    }
+
+    @Test
+    void getImageInfo_Success() {
+        // Given
+        Integer imageId = 1;
+        Image expectedImage = Image.builder()
+                .id(imageId)
+                .name("test.jpg")
+                .filePath("2024/test.jpg")
+                .contentType("image/jpeg")
+                .fileSize(1024L)
+                .createdAt(LocalDateTime.now())
+                .build();
+        when(imageRepository.findById(imageId)).thenReturn(Optional.of(expectedImage));
+
+        // When
+        Optional<Image> result = imageService.getImageInfo(imageId);
+
+        // Then
+        assertTrue(result.isPresent());
+        assertEquals(expectedImage, result.get());
+        verify(imageRepository).findById(imageId);
+
+    }
+
+    @Test
+    void getImageInfo_NotFound() {
+        Integer imageId = 999;
+        when(imageRepository.findById(imageId)).thenReturn(Optional.empty());
+
+        // When
+        Optional<Image> result = imageService.getImageInfo(imageId);
+
+        assertTrue(result.isEmpty());
+        verify(imageRepository).findById(imageId);
+    }
+
+    @Test
+    void getImageInfo_NullId() {
+        assertThrows(IllegalArgumentException.class, () -> imageService.getImageInfo(null));
+        verify(imageRepository, never()).findById(any());
     }
 }

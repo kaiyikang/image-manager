@@ -3,6 +3,7 @@ package com.imageservice.service.Impl;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -56,6 +57,14 @@ public class ImageServiceImpl implements ImageService {
         } catch (IOException e) {
             throw new StorageException("Failed to store file", e);
         }
+    }
+
+    @Override
+    public Optional<Image> getImageInfo(Integer id) {
+        if (id == null)
+            throw new IllegalArgumentException("Image id cannot be null");
+
+        return imageRepository.findById(id);
     }
 
     private boolean isValidContentType(String contentType) {

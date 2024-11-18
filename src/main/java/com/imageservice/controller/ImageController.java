@@ -13,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.imageservice.entity.Image;
 import com.imageservice.exception.business.image.InvalidImageException;
 import com.imageservice.exception.business.image.StorageException;
-import com.imageservice.repository.ImageRepository;
 import com.imageservice.service.ImageService;
 
 import lombok.RequiredArgsConstructor;
@@ -24,8 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class ImageController {
-    private final ImageRepository imageRepository;
     private final ImageService imageService;
+
     // @GetMapping
     // public ResponseEntity<Page<Image>> listImages() {
 
@@ -38,7 +37,9 @@ public class ImageController {
 
     @GetMapping("/{id}/info")
     public ResponseEntity<Image> getImageInfo(@PathVariable Integer id) {
-        return imageRepository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return imageService.getImageInfo(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
