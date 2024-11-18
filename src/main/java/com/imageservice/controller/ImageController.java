@@ -1,19 +1,6 @@
 package com.imageservice.controller;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.web.ServerProperties.Tomcat.Resource;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +14,6 @@ import com.imageservice.entity.Image;
 import com.imageservice.exception.business.image.InvalidImageException;
 import com.imageservice.exception.business.image.StorageException;
 import com.imageservice.repository.ImageRepository;
-import com.imageservice.service.FileService;
 import com.imageservice.service.ImageService;
 
 import lombok.RequiredArgsConstructor;
