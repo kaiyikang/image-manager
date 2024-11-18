@@ -1,0 +1,30 @@
+name: Test Coverage
+
+on:
+  push:
+    branches: []
+  pull_request:
+    branches: []
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: "17"
+          distribution: "adopt"
+
+      - name: Build with maven
+        run: mvn clean test
+
+      - name: Generate JaCoCo Badge
+        uses: cicirello/jacoco-badge-generator@v2
+        with:
+          generate-branches-badge: true
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
