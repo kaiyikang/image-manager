@@ -24,8 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.imageservice.entity.Image;
+import com.imageservice.exception.business.image.InvalidImageException;
+import com.imageservice.exception.business.image.StorageException;
 import com.imageservice.repository.ImageRepository;
 import com.imageservice.service.FileService;
+import com.imageservice.service.ImageService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,8 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ImageController {
     private final ImageRepository imageRepository;
-    private final FileService fileService;
-
+    private final ImageService imageService;
     // @GetMapping
     // public ResponseEntity<Page<Image>> listImages() {
 
@@ -56,65 +58,22 @@ public class ImageController {
     @PostMapping
     public ResponseEntity<Image> uploadImage(@RequestParam("file") MultipartFile file) {
         try {
-            // 是否有输入
-            if (file.isEmpty())
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-            // 输入类型对么
-            String contentType = file.getContentType();
-            if (!isValidContentType(contentType))
-                return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).build();
+            if (file == null || file.isEmpty())
+                return ResponseEntity.badRequest().build();
 
-            // 存到哪里？
-            String filename = file.getOriginalFilename();
-            String filePath = generateFilePath(filename);
+            Image savedImage = imageService.uploadImage(file);
 
-            // 存到本地
-            Path targetPath = Paths.get(fileService.getActualUploadPath()).resolve(filePath); // final destination
-            Files.createDirectories(targetPath.getParent()); // 创建
-            Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedImage);
 
-            // 保存到db
-            Image image = Image.builder()
-                    .name(filename)
-                    .contentType(contentType)
-                    .fileSize(file.getSize())
-                    .createdAt(LocalDateTime.now())
-                    .build();
-
-            Image savedImage = imageRepository.save(image);
-
-            // 成功响应
-            return ResponseEntity.ok(savedImage);
-
-        } catch (IllegalArgumentException e) {
-            log.warn("Valication failed: {}", e.getMessage());
-            return ResponseEntity.badRequest().build();
-        } catch (IOException e) {
-            log.error("Fialed to store file", e);
+        } catch (InvalidImageException e) {
+            log.warn("Invalid image: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (StorageException e) {
+            log.error("Storage error: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         } catch (Exception e) {
-            log.error("Unexpected error", e);
+            log.error("Unexpected error while uploading image", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-    }
-
-    private boolean isValidContentType(String contentType) {
-        if (contentType == null)
-            return false;
-        return contentType.startsWith("image/");
-    }
-
-    private String generateFilePath(String filename) {
-        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-        String randomStr = UUID.randomUUID().toString().substring(0, 8);
-        String extension = getFileExtension(filename);
-        return String.format("%s_%s%s", timestamp, randomStr, extension);
-    }
-
-    private String getFileExtension(String filename) {
-        if (filename == null)
-            return "";
-        int dotIndex = filename.lastIndexOf('.');
-        return (dotIndex == -1) ? "" : filename.substring(dotIndex);
     }
 }
