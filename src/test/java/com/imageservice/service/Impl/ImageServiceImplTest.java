@@ -22,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.imageservice.entity.Image;
 import com.imageservice.repository.ImageRepository;
-import com.imageservice.service.FileService;
 
 @ExtendWith(MockitoExtension.class)
 public class ImageServiceImplTest {
