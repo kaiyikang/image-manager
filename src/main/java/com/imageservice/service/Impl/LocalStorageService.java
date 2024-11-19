@@ -1,10 +1,14 @@
 package com.imageservice.service.Impl;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,5 +36,15 @@ public class LocalStorageService implements StorageService {
         } catch (IOException e) {
             throw new StorageException("Failed to store file " + filePath, e);
         }
+    }
+
+    @Override
+    public Resource loadAsResource(String filePath) throws IOException {
+        Path path = Paths.get(fileService.getActualUploadPath()).resolve(filePath).normalize();
+        Resource resource = new FileSystemResource(path.toFile());
+        if (!resource.exists()) {
+            throw new FileNotFoundException("File not found: " + filePath);
+        }
+        return resource;
     }
 }

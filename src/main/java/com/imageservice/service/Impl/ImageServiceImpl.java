@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,8 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.imageservice.entity.Image;
+import com.imageservice.entity.ImageDTO;
 import com.imageservice.exception.business.image.ImageServiceException;
 import com.imageservice.exception.business.image.InvalidImageException;
+import com.imageservice.exception.business.image.ResourceNotFoundException;
 import com.imageservice.exception.business.image.StorageException;
 import com.imageservice.repository.ImageRepository;
 import com.imageservice.service.ImageService;
@@ -58,6 +61,26 @@ public class ImageServiceImpl implements ImageService {
             return imageRepository.save(image);
 
         } catch (IOException e) {
+            throw new StorageException("Failed to store file", e);
+        }
+    }
+
+    @Override
+    public ImageDTO getImage(Integer id) throws StorageException {
+        Image image = imageRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Image not found with id: " + id));
+
+        try {
+            Resource resource = localStorageService.loadAsResource(image.getFilePath());
+
+            return ImageDTO.builder()
+                    .resource(resource)
+                    .contentType(image.getContentType())
+                    .contentLength(resource.contentLength())
+                    .fileName(image.getName())
+                    .build();
+        } catch (IOException e) {
+            log.error("Error while loading image file: {}", image.getFilePath());
             throw new StorageException("Failed to store file", e);
         }
     }
